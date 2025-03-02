@@ -10,7 +10,7 @@ import java.util.List;
 public interface SensorRepository extends JpaRepository<Sensor, Long> {
 
     @Query("""
-        SELECT s FROM Sensor s 
+        SELECT s FROM Sensor s
         WHERE (COALESCE(:name, '') = '' OR LOWER(s.name) LIKE LOWER(CONCAT('%', :name, '%')))
         AND (COALESCE(:model, '') = '' OR LOWER(s.model) LIKE LOWER(CONCAT('%', :model, '%')))
     """)

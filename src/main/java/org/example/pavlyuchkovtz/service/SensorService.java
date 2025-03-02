@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class SensorService {
 
     private final SensorRepository sensorRepository;
@@ -44,12 +43,14 @@ public class SensorService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void createSensor(SensorDto sensorDto) {
         Sensor sensor = sensorMapper.toEntity(sensorDto);
         Sensor savedSensor = sensorRepository.save(sensor);
         sensorMapper.toDto(savedSensor);
     }
 
+    @Transactional
     public void updateSensor(Long id, SensorDto sensorDto) {
         Sensor sensor = sensorRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Сенсор с таким ID не найден"));
@@ -58,6 +59,7 @@ public class SensorService {
         sensorMapper.toDto(updatedSensor);
     }
 
+    @Transactional
     public void deleteSensor(Long id) {
         Sensor sensor = sensorRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Сенсор с таким ID не найден"));
