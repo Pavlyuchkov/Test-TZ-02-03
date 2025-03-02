@@ -1,0 +1,39 @@
+services:
+
+  sensors-service:
+    container_name: sensors-service
+    image: sensors-service:latest
+    ports:
+      - "9001:9001"
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://sensors_db:5432/sensors_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - local-network
+
+  database:
+    container_name: sensors_db
+    image: postgres:14-alpine
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sensors_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    networks:
+      - local-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 3s
+      timeout: 2s
+      retries: 3
+
+networks:
+  local-network:
+    driver: bridge
